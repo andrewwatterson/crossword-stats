@@ -2,12 +2,16 @@ import React from 'react';
 
 import {FirebaseContext} from './FirebaseContext';
 
-import {prettyTimeFromSeconds, shortDateFromTimestamp} from './helpers';
+import {prettyTimeFromSeconds, shortDateFromCrosswordDate} from './helpers';
 
 function TimeRow(props) {
-  const rowDate = props.data.date.toDate();
+  const rowDate = {
+    year: props.data.year,
+    month: props.data.month,
+    date: props.data.date
+  };
 
-  return(<tr className="time-row"><td>{shortDateFromTimestamp(rowDate)}</td><td>{prettyTimeFromSeconds(props.data.time)}</td></tr>)
+  return(<tr className="time-row"><td>{shortDateFromCrosswordDate(rowDate)}</td><td>{prettyTimeFromSeconds(props.data.time)}</td></tr>)
 }
 
 export default class TimesList extends React.Component {
@@ -25,7 +29,7 @@ export default class TimesList extends React.Component {
 
     const userId = user.uid;
     
-    const query = db.collection("times").where("user", "==", userId).orderBy("date", "desc");
+    const query = db.collection("times").where("user", "==", userId).orderBy("year", "desc").orderBy("month", "desc").orderBy("date", "desc");
 
     let newRows = Array();
 

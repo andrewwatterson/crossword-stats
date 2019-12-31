@@ -16,7 +16,6 @@ export default class RegisterForm extends React.Component {
 
   registerAccount(evt) {
     evt.preventDefault();
-    console.log('registering with', this.state.register_username, this.state.register_password);
     this.props.createAccountCallback(this.state.register_username, this.state.register_password)
       .catch((error)=> {
         console.log(error.code, error.message);

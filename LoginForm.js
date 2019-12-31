@@ -16,7 +16,6 @@ export default class LoginForm extends React.Component {
 
   doLogin(evt) {
     evt.preventDefault();
-    console.log('logging in with', this.state.login_username, this.state.login_password);
     this.props.loginCallback(this.state.login_username, this.state.login_password)
       .catch((error)=> {
         console.log(error.code, error.message);

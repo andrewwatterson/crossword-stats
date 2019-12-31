@@ -9,7 +9,7 @@ const app = express();
 /* FIREBASE CONFIG */
 firebase.initializeApp({
   databaseURL: "https://crossword-stats.firebaseio.com",
-  credential: firebase.credential.cert(secrets.firebaseConfig)
+  credential: firebase.credential.cert(secrets.firebaseServerConfig)
 });
 const db = firebase.firestore();
 

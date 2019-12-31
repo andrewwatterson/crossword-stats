@@ -6,21 +6,15 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import {FirebaseContext} from './FirebaseContext';
+import secrets from './secrets';
 
 import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
 import TimesList from './TimesList';
 import TimeInput from './TimeInput';
+import MyTeams from './MyTeams';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDvcwBdxwxxUvcdVzzNzgQX5CxbcsYJOZ0",
-  authDomain: "crossword-stats.firebaseapp.com",
-  databaseURL: "https://crossword-stats.firebaseio.com",
-  projectId: "crossword-stats",
-  storageBucket: "crossword-stats.appspot.com",
-  messagingSenderId: "1056376664586",
-  appId: "1:1056376664586:web:b8a165bde61c448d"
-};
+const firebaseConfig = secrets.firebaseWebConfig;
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
@@ -30,32 +24,42 @@ const providers = {
 
 }
 
-function CrosswordStats(props) {
-  const {
-    user,
-    signOut,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword
-  } = props;
+class CrosswordStats extends React.Component {
 
-  var loggedOutState =
-    <React.Fragment>
-      <RegisterForm createAccountCallback={createUserWithEmailAndPassword}></RegisterForm>
-      <LoginForm loginCallback={signInWithEmailAndPassword}></LoginForm>
-    </React.Fragment>;
+  constructor(props) {
+    super(props);
+
+  }
+
+  render() {
+    const {
+      user,
+      signOut,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword
+    } = this.props;
   
-  var loggedInState =
-    <React.Fragment>
-      logged in as {user && user.email}! <a href="#" onClick={signOut}>logout</a>
-      <TimeInput />
-      <TimesList />
-    </React.Fragment>;
-  
-  return (
-    <FirebaseContext.Provider value={{app: firebaseApp, user: user, db: db}}>
-      {user ? loggedInState : loggedOutState}
-    </FirebaseContext.Provider>
-  );
+    var loggedOutState =
+      <React.Fragment>
+        <RegisterForm createAccountCallback={createUserWithEmailAndPassword}></RegisterForm>
+        <LoginForm loginCallback={signInWithEmailAndPassword}></LoginForm>
+      </React.Fragment>;
+    
+    var loggedInState =
+      <React.Fragment>
+        logged in as {user && user.email}! <a href="#" onClick={signOut}>logout</a>
+        <TimeInput />
+        <MyTeams />
+        {/*<TimesList />*/}
+      </React.Fragment>;
+    
+    return (
+      <FirebaseContext.Provider value={{app: firebaseApp, user: user, db: db}}>
+        {user ? loggedInState : loggedOutState}
+      </FirebaseContext.Provider>
+    );
+  }
+
 }
 
 export default withFirebaseAuth({
