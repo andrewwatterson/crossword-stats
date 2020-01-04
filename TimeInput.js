@@ -2,7 +2,7 @@ import React from 'react';
 
 import {FirebaseContext} from './FirebaseContext';
 
-import {parseTimeWithCheck, parseHumanDateToFirebaseTimestamp} from './helpers';
+import {parseTimeWithCheck, parseHumanDateToCrosswordDateObject} from './helpers';
 
 export default class TimeInput extends React.Component {
   
@@ -23,22 +23,36 @@ export default class TimeInput extends React.Component {
     evt.preventDefault();
 
     var parsedTime = parseTimeWithCheck(this.state.timeinput_time);
-    var parsedTimestamp = parseHumanDateToFirebaseTimestamp(this.state.timeinput_date);
+    var parsedTimestamp = parseHumanDateToCrosswordDateObject(this.state.timeinput_date);
 
     const {db, user} = this.context;
 
     const userId = user.uid;
-    
+
     if(parsedTime === null || parsedTimestamp === null) {
         console.log('value error!', parsedTime, parsedTimestamp);
     } else {
       console.log('committing', parsedTime, parsedTimestamp);
-  
-      const query = db.collection("times").add({
-        date: parsedTimestamp,
-        time: parsedTime,
-        user: userId
-      });
+      
+      const dupQuery = db.collection("times")
+        .where("user", "==", userId)
+        .where("year", "==", parsedTimestamp.year)
+        .where("month", "==", parsedTimestamp.month)
+        .where("date", "==", parsedTimestamp.date);
+
+      dupQuery.get().then((querySnapshot) => {
+        if(querySnapshot.size > 0) {
+          querySnapshot.forEach((doc) => {
+            doc.update({time: parsedTime});
+          });
+        } else {
+          const query = db.collection("times").add({
+            time: parsedTime,
+            user: userId,
+            ...parsedTimestamp
+          });
+        }
+      })
     }
   }
 

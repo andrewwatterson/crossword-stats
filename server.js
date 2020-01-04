@@ -1,7 +1,7 @@
 const express = require('express');
 const firebase = require('firebase-admin');
 
-const secrets = require('./secrets.js');
+const secrets = require('./serverSecrets.js');
 
 /* EXPRESS CONFIG */
 const app = express();

@@ -26,6 +26,10 @@ export function shortDateFromCrosswordDate(crosswordDate) {
     return dateFormat(date, "ddd, d mmm");
 }
 
+export function dayNames() {
+    return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+}
+
 export function parseTime(time) {
     var cleanTime = time.replace(/\s/g,'');
     var parts = cleanTime.split(":");
@@ -101,4 +105,22 @@ export function parseHumanDateToFirebaseTimestamp(timestamp) {
     } else {
         return null;
     }
+}
+
+export function nonNullMinIndexFromArray(arr) {
+    var min;
+    for(var a in arr) {
+        if(arr[a] && (min == null || arr[a] < arr[min])) { min = a; }
+    }
+
+    return min;
+}
+
+export function nonNullMaxIndexFromArray(arr) {
+    var max;
+    for(var a in arr) {
+        if(arr[a] && (max == null || arr[a] > arr[max])) { max = a; }
+    }
+
+    return max;
 }

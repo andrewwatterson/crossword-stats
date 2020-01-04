@@ -29,7 +29,7 @@ for(var s in sampleData) {
             }
 
             // commented out for safety
-            //const query = db.collection("times").add(dbObj);
+            //const query = db.collection("people").doc(pUids[i]).collection("times").add(dbObj);
         }
     }
 }

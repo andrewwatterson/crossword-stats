@@ -6,13 +6,15 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import {FirebaseContext} from './FirebaseContext';
-import secrets from './secrets';
+import secrets from './webSecrets';
 
 import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
 import TimesList from './TimesList';
 import TimeInput from './TimeInput';
 import MyTeams from './MyTeams';
+
+import './crossword-stats.css';
 
 const firebaseConfig = secrets.firebaseWebConfig;
 
