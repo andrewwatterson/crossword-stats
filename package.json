@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "parcel watch index.html",
-    "build": "parcel build index.html --no-source-maps -d build --public-url ./"
+    "build": "rm -r build/* && parcel build index.html --no-source-maps -d build --public-url ./"
   },
   "dependencies": {
     "@firebase/app": "^0.4.14",
@@ -18,9 +18,10 @@
     "firebase-admin": "^8.3.0",
     "parcel-bundler": "^1.12.3",
     "prop-types": "^15.7.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-with-firebase-auth": "^1.0.3"
+    "react": ">= 16.3.0",
+    "react-dom": ">= 16.3.0",
+    "react-with-firebase-auth": "^1.0.3",
+    "styled-components": "^4.4.1"
   },
   "engines": {
     "node": "11.x"

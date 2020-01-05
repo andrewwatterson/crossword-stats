@@ -1,4 +1,5 @@
 import React from 'react';
+import Styled from 'styled-components';
 
 import withFirebaseAuth from 'react-with-firebase-auth';
 import * as firebase from 'firebase/app';
@@ -8,8 +9,9 @@ import 'firebase/firestore';
 import {FirebaseContext} from './FirebaseContext';
 import secrets from './webSecrets';
 
-import RegisterForm from './RegisterForm';
-import LoginForm from './LoginForm';
+import {AppWrapper} from './ui';
+
+import LoginSignupPage from './LoginSignupPage';
 import TimesList from './TimesList';
 import TimeInput from './TimeInput';
 import MyTeams from './MyTeams';
@@ -22,46 +24,40 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
 const db = firebaseApp.firestore();
 
-const providers = {
+const providers = {};
 
-}
+function CrosswordStats(props) {
 
-class CrosswordStats extends React.Component {
-
-  constructor(props) {
-    super(props);
-
-  }
-
-  render() {
-    const {
-      user,
-      signOut,
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword
-    } = this.props;
+  const {
+    user,
+    signOut,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword
+  } = props;
   
-    var loggedOutState =
-      <React.Fragment>
-        <RegisterForm createAccountCallback={createUserWithEmailAndPassword}></RegisterForm>
-        <LoginForm loginCallback={signInWithEmailAndPassword}></LoginForm>
-      </React.Fragment>;
-    
-    var loggedInState =
-      <React.Fragment>
-        logged in as {user && user.email}! <a href="#" onClick={signOut}>logout</a>
-        <TimeInput />
-        <MyTeams />
-        {/*<TimesList />*/}
-      </React.Fragment>;
-    
-    return (
-      <FirebaseContext.Provider value={{app: firebaseApp, user: user, db: db}}>
-        {user ? loggedInState : loggedOutState}
-      </FirebaseContext.Provider>
-    );
-  }
-
+  var loggedInState =
+    <React.Fragment>
+      logged in as {user && user.email}! <a href="#" onClick={signOut}>logout</a>
+      <TimeInput />
+      <MyTeams />
+      {/*<TimesList />*/}
+    </React.Fragment>;
+  
+  return (
+    <FirebaseContext.Provider value={{app: firebaseApp, user: user, db: db}}>
+      <AppWrapper>
+        {user
+          ?
+            loggedInState
+          :
+            <LoginSignupPage
+              createAccountCallback={createUserWithEmailAndPassword}
+              loginCallback={signInWithEmailAndPassword}
+            />
+        }
+      </AppWrapper>
+    </FirebaseContext.Provider>
+  );
 }
 
 export default withFirebaseAuth({

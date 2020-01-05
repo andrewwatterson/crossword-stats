@@ -1,4 +1,5 @@
 import React from 'react';
+import {FrontPageForm, InputGroup, SubmitButton} from './ui';
 
 export default class LoginForm extends React.Component {
   constructor(props) {
@@ -24,14 +25,18 @@ export default class LoginForm extends React.Component {
 
   render() {
     return (
-      <div className="login-form">
-        <h3>Login</h3>
-        <form action=''>
-          <input name="login_username" id="login_username" onChange={(evt) => this.handleChange(evt)} />
+      <FrontPageForm>
+        <InputGroup>
+          <label htmlFor="login_username">Email</label>
+          <input name="login_username" id="login_username" type="text" onChange={(evt) => this.handleChange(evt)} />
+        </InputGroup>
+        <InputGroup>
+          <label htmlFor="login_password">Password</label>
           <input name="login_password" id="login_password" type="password" onChange={(evt) => this.handleChange(evt)} />
-          <input name="login_submit" id="login_submit" type="submit" onClick={(evt) => this.doLogin(evt)} />
-        </form>
-      </div>
+        </InputGroup>
+
+        <SubmitButton onClick={(evt) => this.doLogin(evt)}>Log In</SubmitButton>
+      </FrontPageForm>
     );
   }
 }
