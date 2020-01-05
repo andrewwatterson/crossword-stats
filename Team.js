@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext}  from 'react';
+import Styled from 'styled-components';
 import cx from 'classnames';
 
 import {FirebaseContext} from './FirebaseContext';
 
 import {prettyTimeFromSeconds, dayNames, nonNullMaxIndexFromArray, nonNullMinIndexFromArray} from './helpers';
-
-import './team.css';
-
+import {Card} from './ui';
 
 export default function Team(props) {
   const [times, setTimes] = useState({ timesByDay: null, totalWins: null, totalTime: null });
@@ -95,53 +94,168 @@ export default function Team(props) {
   const {timesByDay, totalWins, totalTime} = times;
 
   return (
-    <div className="team">
-      {teamInfo.name}
-      <table>
-        <tbody>
-          <tr>
-            <td></td>
-            {teamInfo.members.length > 0 && teamInfo.members.map((m, i) => {
-              return <td key={i}>{m.name}</td>
-            })}
-          </tr>
-          {timesByDay && Object.keys(timesByDay).map((day) => {
+    <TeamScrollWrapper>
+      <TeamCard>
+        <TeamTitle>{teamInfo.name}</TeamTitle>
+        <ResultsTable>
+          <thead>
+            <tr>
+              <td></td>
+              {teamInfo.members.length > 0 && teamInfo.members.map((m, i) => {
+                return <NameCell key={i}>{m.name}</NameCell>
+              })}
+            </tr>
+            <ShadedRow className="times-row">
+              <TitleCell className="shaded">Time</TitleCell>
+              {teamInfo.members.map((m, i) => {
 
-              var min = nonNullMinIndexFromArray(timesByDay[day]);
-              var max = nonNullMaxIndexFromArray(timesByDay[day]);
-              return (
-                  <tr key={day}>
-                    <td>{dayNames()[day]}</td>
-                    {timesByDay[day].map((member, i) => {
-                      return (
-                        <td
-                          key={day + "-" + i}
-                          className={cx({
-                            'standing-lowest': Number(max) === Number(i),
-                            'standing-highest': Number(min) === Number(i)
-                          })}
-                        >
-                          {member && prettyTimeFromSeconds(member)}
-                        </td>
-                      );
-                    })}
-                  </tr>
-              );
-          })}
-          <tr>
-            <td></td>
-            {teamInfo.members.map((m, i) => {
-              return <td key={i}>{totalWins && totalWins[i]}</td>
+                var fewestWins = nonNullMinIndexFromArray(totalWins);
+                var mostWins = nonNullMaxIndexFromArray(totalWins);
+
+                return (
+                  <TimeCell key={i}>
+                    <TimeContainer
+                      className={cx({
+                        'standing-lowest': Number(fewestWins) === Number(i),
+                        'standing-highest': Number(mostWins) === Number(i)
+                      })}
+                    >
+                      {totalWins && totalWins[i]}
+                    </TimeContainer>
+                  </TimeCell>);
+              })}
+            </ShadedRow>
+            <ShadedRow className="wins-row">
+              <TitleCell className="shaded">Wins</TitleCell>
+              {teamInfo.members.map((m, i) => {
+                return <TimeCell key={i}>{totalTime && prettyTimeFromSeconds(totalTime[i])}</TimeCell>
+              })}
+            </ShadedRow>
+          </thead>
+          <tbody>
+
+            {timesByDay && Object.keys(timesByDay).map((day) => {
+
+                var min = nonNullMinIndexFromArray(timesByDay[day]);
+                var max = nonNullMaxIndexFromArray(timesByDay[day]);
+                return (
+                    <tr key={day}>
+                      <TitleCell>{dayNames()[day]}</TitleCell>
+                      {timesByDay[day].map((member, i) => {
+                        return (
+                          <TimeCell key={day + "-" + i}>
+                            <TimeContainer
+                              className={cx({
+                                'standing-lowest': Number(max) === Number(i),
+                                'standing-highest': Number(min) === Number(i)
+                              })}
+                            >
+                              {member && prettyTimeFromSeconds(member)}
+                            </TimeContainer>
+                          </TimeCell>
+                        );
+                      })}
+                    </tr>
+                );
             })}
-          </tr>
-          <tr>
-            <td></td>
-            {teamInfo.members.map((m, i) => {
-              return <td key={i}>{totalTime && prettyTimeFromSeconds(totalTime[i])}</td>
-            })}
-          </tr>
-        </tbody>
-      </table>
-    </div>
+          </tbody>
+        </ResultsTable>
+      </TeamCard>
+      <Spacer />
+    </TeamScrollWrapper>
   );
 }
+
+const TeamScrollWrapper = Styled.div`
+  max-width: 100vw;
+  overflow: auto;
+
+  padding: 4px;
+  box-sizing: border-box;
+
+  display: flex;
+`;
+
+const Spacer = Styled.div`
+  flex: 0 0 12px;
+`;
+
+const TeamCard = Styled(Card)`
+  padding: 20px;
+  margin: 0px;
+  margin-left: 12px;
+`;
+
+const TeamTitle = Styled.div`
+  font-family: stymie, serif;
+  font-size: 21px;
+
+  margin-bottom: 12px;
+`;
+
+const ResultsTable = Styled.table`
+
+  &, tr, td {
+    border: none;
+    border-collapse: collapse;
+  }
+
+  thead tr:first-child td {
+    padding-bottom: 8px;
+  }
+
+  tbody tr:first-child td {
+    padding-top: 8px;
+  }
+`;
+
+const TitleCell = Styled.td`
+  padding: 0px 24px 0px 12px;
+  text-align: right;
+  color: #999999;
+`;
+
+const NameCell = Styled.td`
+  text-align: center;
+  font-weight: bold;
+`;
+
+const TimeCell = Styled.td`
+  text-align: center;
+  padding: 1px 4px;
+`;
+
+const TimeContainer = Styled.div`
+  width: 72px;
+  height: 28px;
+  line-height: 28px;
+
+  &.standing-lowest {
+    background-color: #FAD5DE;
+  }
+
+  &.standing-highest {
+    background-color: #D4F5E2;
+  }
+`;
+
+const ShadedRow = Styled.tr`
+  background-color: #F5F5F5;
+
+  td:last-child {
+    padding-right: 8px;
+  }
+
+  &.times-row td {
+    padding-top: 8px;
+  }
+
+  &.wins-row td {
+    padding-bottom: 8px;
+  }
+
+  ${TitleCell} {
+    color: black;
+    background-color: #EBEBEB;
+  }
+`;

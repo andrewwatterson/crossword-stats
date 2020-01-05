@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import Styled from 'styled-components';
 import cx from 'classnames';
 
+import {Card} from './ui';
+
 import SignupForm from './SignupForm';
 import LoginForm from './LoginForm';
 
@@ -12,7 +14,7 @@ export default function LoginSignupPage(props) {
   return (
     <>
       <HomepageTitle><strong>Crossword</strong><br />Stats</HomepageTitle>
-      <CardWrapper>
+      <Card>
         <CardTabs>
           <CardTab
             className={cx({'selected': selectedTab.tab == 'login'})}
@@ -31,13 +33,13 @@ export default function LoginSignupPage(props) {
           <SignupForm createAccountCallback={props.createAccountCallback}></SignupForm>}
         {selectedTab.tab === 'login' &&
           <LoginForm loginCallback={props.loginCallback}></LoginForm>}
-      </CardWrapper>
+      </Card>
     </>
   );
 }
 
 const HomepageTitle = Styled.div`
-  font-family: stymie;
+  font-family: stymie, serif;
 
   font-size: 40px;
   line-height: 1;
@@ -48,25 +50,16 @@ const HomepageTitle = Styled.div`
   margin-bottom: 60px;
 `;
 
-const CardWrapper = Styled.div`
-  border-radius: 3px;
-  margin: 0px 24px;
-  max-width: 500px;
-  box-shadow: 0px 0px 4px 0px rgba(0,0,0,.25);
-`;
-
 const CardTabs = Styled.div`
   display: flex;
 `;
 
 const CardTab = Styled.button`
 
-  font-family: stymie !important;
+  font-family: stymie, serif !important;
   font-size: 21px;
   padding: 16px 0px;
 
-  cursor: pointer;
-  outline: none;
   flex: 1 1 auto;
   background-color: #f2f2f2;
   box-shadow: inset 0px 1px 0px 0px white;

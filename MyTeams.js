@@ -1,5 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
+import Styled from 'styled-components';
 
 import Team from './Team';
 
@@ -62,11 +63,11 @@ export default class MyTeams extends React.Component {
     const nextWeekExists = this.nextWeekExists();
     return (
       <div className="teams">
-        <div className="dateRow">
-          <a href="#" onClick={() => { this.prevWeek(); }}>prev week</a>
+        <DateRow>
+          <LeftArrow href="#" onClick={() => { this.prevWeek(); }} alt="Previous Week"></LeftArrow>
           <div className="weekNumber">Week of {getPrettyDateFromWeekNumber(weekNo, weekNoYear)}</div>
-          <a href="#" className={cx({'disabled': !nextWeekExists})} onClick={() => { this.nextWeek(); }}>next week</a>
-        </div>
+          <RightArrow href="#" className={cx({'disabled': !nextWeekExists})} onClick={() => { this.nextWeek(); }} alt="Next Week"></RightArrow>
+        </DateRow>
         {this.state.teams.map((team) => {
             return <Team {...{
               key: team,
@@ -81,3 +82,30 @@ export default class MyTeams extends React.Component {
 }
 
 MyTeams.contextType = FirebaseContext;
+
+const DateRow = Styled.div`
+  font-family: stymie, serif;
+  font-size: 21px;
+  padding: 0px 8px 0px 16px;
+  margin-bottom: 24px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const LeftArrow = Styled.a`
+  height: 24px;
+  width: 24px;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z'/%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3C/svg%3E");
+`;
+
+const RightArrow = Styled(LeftArrow)`
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z'/%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3C/svg%3E");
+
+  &.disabled {
+    cursor: not-allowed;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23999999' d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z'/%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3C/svg%3E");
+  }
+`;

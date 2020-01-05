@@ -4,6 +4,9 @@ export const AppWrapper = Styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  max-width: 100%;
+  overflow: hidden;
 `;
 
 export const FrontPageForm = Styled.form`
@@ -50,4 +53,11 @@ export const SubmitButton = Styled.button`
   text-transform: uppercase;
 
   margin-top: 16px;
+`;
+
+export const Card = Styled.div`
+  border-radius: 3px;
+  margin: 0px 24px;
+  max-width: 500px;
+  box-shadow: 0px 0px 4px 0px rgba(0,0,0,.25);
 `;
