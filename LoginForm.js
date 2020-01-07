@@ -1,5 +1,5 @@
 import React from 'react';
-import {FrontPageForm, InputGroup, SubmitButton} from './ui';
+import {Form, InputGroup, SubmitButton} from './ui';
 
 export default class LoginForm extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ export default class LoginForm extends React.Component {
 
   render() {
     return (
-      <FrontPageForm>
+      <Form>
         <InputGroup>
           <label htmlFor="login_username">Email</label>
           <input name="login_username" id="login_username" type="text" onChange={(evt) => this.handleChange(evt)} />
@@ -36,7 +36,7 @@ export default class LoginForm extends React.Component {
         </InputGroup>
 
         <SubmitButton onClick={(evt) => this.doLogin(evt)}>Log In</SubmitButton>
-      </FrontPageForm>
+      </Form>
     );
   }
 }

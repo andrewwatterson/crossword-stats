@@ -28,7 +28,11 @@ export default class MyTeams extends React.Component {
     const query = db.collection("profile").doc(userId);
 
     query.get().then((docSnapshot) => {
-      this.setState({teams: docSnapshot.data().teams});
+      var newTeams = docSnapshot.data().teams;
+
+      if(newTeams) {
+        this.setState({teams: newTeams});
+      }
     });
   }
 
@@ -68,7 +72,7 @@ export default class MyTeams extends React.Component {
           <div className="weekNumber">Week of {getPrettyDateFromWeekNumber(weekNo, weekNoYear)}</div>
           <RightArrow href="#" className={cx({'disabled': !nextWeekExists})} onClick={() => { this.nextWeek(); }} alt="Next Week"></RightArrow>
         </DateRow>
-        {this.state.teams.map((team) => {
+        {this.state.teams && this.state.teams.map((team) => {
             return <Team {...{
               key: team,
               weekNo,
@@ -76,6 +80,9 @@ export default class MyTeams extends React.Component {
               id: team
             }} />
         })}
+        {this.state.teams && this.state.teams.length == 0 &&
+          <div>join some teams!</div>
+        }
       </div>
     );
   }

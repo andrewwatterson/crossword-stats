@@ -9,7 +9,7 @@ export const AppWrapper = Styled.div`
   overflow: hidden;
 `;
 
-export const FrontPageForm = Styled.form`
+export const Form = Styled.form`
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -18,7 +18,7 @@ export const FrontPageForm = Styled.form`
 
   padding: 24px 24px 48px 24px;
 
-  input[type=text], input[type=password] {
+  input[type=text], input[type=date], input[type=password] {
     border: none;
     background-color: #EDF3FC;
     
@@ -32,6 +32,8 @@ export const InputGroup = Styled.div`
   margin-bottom: 16px;
 
   label, input { display: block; }
+
+  input { width: 100%; box-sizing: border-box; }
 
   label {
     font-size: 16px;
