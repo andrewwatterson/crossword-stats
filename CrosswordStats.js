@@ -75,10 +75,6 @@ function CrosswordStats(props) {
 }
 
 const TimeInputFAB = Styled.button`
-  border: none;
-  outline: none;
-  background: none;
-
   position: fixed;
   bottom: 16px;
   right: 16px;

@@ -7,6 +7,7 @@ export const AppWrapper = Styled.div`
 
 export const AppContent = Styled.div`
   padding-top: 72px;
+  padding-bottom: 12px;
 
   display: flex;
   flex-direction: column;

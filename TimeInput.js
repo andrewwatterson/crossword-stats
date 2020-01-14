@@ -67,7 +67,7 @@ export default class TimeInput extends React.Component {
           <CloseButtonRow>
             <CloseButton onClick={() => {this.props.closeModalCallback()}} />
           </CloseButtonRow>
-          <div className="time-input">
+          <ModalContentWrapper>
             <ModalTitle>Add a Time</ModalTitle>
             <ModalForm>
               <InputGroup>
@@ -80,7 +80,7 @@ export default class TimeInput extends React.Component {
               </InputGroup>
               <SubmitButton onClick={(evt) => {this.addTime(evt)}}>Add Time</SubmitButton>
             </ModalForm>    
-          </div>
+          </ModalContentWrapper>
         </ModalWrapper>
       </ModalFader>
     );
@@ -109,6 +109,10 @@ const ModalTitle = Styled.div`
   text-align: center;
 
   margin-bottom: 36px;
+`;
+
+const ModalContentWrapper = Styled.div`
+  padding: 24px 24px 48px 24px;
 `;
 
 const ModalForm = Styled(Form)`

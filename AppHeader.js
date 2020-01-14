@@ -104,8 +104,6 @@ const ButtonGroup = Styled.div`
   text-align: center;
 
   button {
-    border: none;
-    outline: none;
     background: none;
 
     display: inline-flex;

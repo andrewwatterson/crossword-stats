@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Styled from 'styled-components';
 import cx from 'classnames';
 
-import {Card} from './ui';
+import {AppContent, Card} from './ui';
 
 import SignupForm from './SignupForm';
 import LoginForm from './LoginForm';
@@ -12,7 +12,7 @@ export default function LoginSignupPage(props) {
   const [selectedTab, setTab] = useState({tab: 'login'});
 
   return (
-    <>
+    <AppContent>
       <HomepageTitle><strong>Crossword</strong><br />Stats</HomepageTitle>
       <Card>
         <CardTabs>
@@ -34,7 +34,7 @@ export default function LoginSignupPage(props) {
         {selectedTab.tab === 'login' &&
           <LoginForm loginCallback={props.loginCallback}></LoginForm>}
       </Card>
-    </>
+    </AppContent>
   );
 }
 
@@ -46,7 +46,6 @@ const HomepageTitle = Styled.div`
 
   text-align: center;
 
-  margin-top: 80px;
   margin-bottom: 60px;
 `;
 

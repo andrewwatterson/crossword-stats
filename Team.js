@@ -106,7 +106,7 @@ export default function Team(props) {
               })}
             </tr>
             <ShadedRow className="times-row">
-              <TitleCell className="shaded">Time</TitleCell>
+              <TitleCell className="shaded">Wins</TitleCell>
               {teamInfo.members.map((m, i) => {
 
                 var fewestWins = nonNullMinIndexFromArray(totalWins);
@@ -126,7 +126,7 @@ export default function Team(props) {
               })}
             </ShadedRow>
             <ShadedRow className="wins-row">
-              <TitleCell className="shaded">Wins</TitleCell>
+              <TitleCell className="shaded">Time</TitleCell>
               {teamInfo.members.map((m, i) => {
                 return <TimeCell key={i}>{totalTime && prettyTimeFromSeconds(totalTime[i])}</TimeCell>
               })}
@@ -174,6 +174,7 @@ const TeamScrollWrapper = Styled.div`
   box-sizing: border-box;
 
   display: flex;
+  margin-bottom: 16px;
 `;
 
 const Spacer = Styled.div`
