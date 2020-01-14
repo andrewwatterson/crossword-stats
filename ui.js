@@ -1,12 +1,16 @@
 import Styled from 'styled-components';
 
 export const AppWrapper = Styled.div`
+  max-width: 100%;
+  overflow: hidden;
+`;
+
+export const AppContent = Styled.div`
+  padding-top: 72px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  max-width: 100%;
-  overflow: hidden;
 `;
 
 export const Form = Styled.form`

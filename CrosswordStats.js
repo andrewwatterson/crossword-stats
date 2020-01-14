@@ -9,9 +9,10 @@ import 'firebase/firestore';
 import {FirebaseContext} from './FirebaseContext';
 import secrets from './webSecrets';
 
-import {AppWrapper} from './ui';
+import {AppWrapper, AppContent} from './ui';
 
 import LoginSignupPage from './LoginSignupPage';
+import AppHeader from './AppHeader';
 import TimesList from './TimesList';
 import TimeInput from './TimeInput';
 import MyTeams from './MyTeams';
@@ -41,9 +42,13 @@ function CrosswordStats(props) {
 
   var loggedInState =
     <React.Fragment>
-      logged in as {user && user.email}! <a href="#" onClick={signOut}>logout</a>
-      <MyTeams />
-      {/*<TimesList />*/}
+      <AppHeader
+        signOutCallback={() => { signOut(); }}
+      />
+      <AppContent>
+        <MyTeams />
+        {/*<TimesList />*/}
+      </AppContent>
       {popups.timeInput
         ?
           <TimeInput closeModalCallback={() => { setPopups({timeInput:false}); }} />
@@ -70,6 +75,10 @@ function CrosswordStats(props) {
 }
 
 const TimeInputFAB = Styled.button`
+  border: none;
+  outline: none;
+  background: none;
+
   position: fixed;
   bottom: 16px;
   right: 16px;
