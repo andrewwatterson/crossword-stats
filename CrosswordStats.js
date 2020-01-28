@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Styled from 'styled-components';
 
-import withFirebaseAuth from 'react-with-firebase-auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
@@ -9,12 +9,15 @@ import 'firebase/firestore';
 import {FirebaseContext} from './FirebaseContext';
 import secrets from './webSecrets';
 
+import * as Stz from './style.js';
 import {AppWrapper, AppContent} from './ui';
 
 import LoginSignupPage from './LoginSignupPage';
 import AppHeader from './AppHeader';
 import TimesList from './TimesList';
 import TimeInput from './TimeInput';
+import CreateTeam from './CreateTeam';
+import InviteLink from './InviteLink';
 import MyTeams from './MyTeams';
 
 import './crossword-stats.css';
@@ -25,49 +28,80 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
 const db = firebaseApp.firestore();
 
-const providers = {};
+export default function CrosswordStats(props) {
 
-function CrosswordStats(props) {
+  const [user, loading, error] = useAuthState(firebaseAppAuth);
 
-  const {
-    user,
-    error,
-    loading,
-    signOut,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword
-  } = props;
+  let [modals, setModals] = useState({open: false, options: {}});
 
-  let [popups, setPopups] = useState({timeInput: false});
+  var openModal = (name, options) => {
+    setModals({open: name, options: options});
+  }
 
-  var loggedInState =
+  var closeModal = () => {
+    setModals({open: false, options: {}});
+  }
+
+  var loggedInState = (
     <React.Fragment>
       <AppHeader
-        signOutCallback={() => { signOut(); }}
+        signOutCallback={() => { firebaseAppAuth.signOut(); }}
       />
       <AppContent>
         <MyTeams />
         {/*<TimesList />*/}
       </AppContent>
-      {popups.timeInput
-        ?
-          <TimeInput closeModalCallback={() => { setPopups({timeInput:false}); }} />
-        :
-          <TimeInputFAB alt="Add Time" onClick={() => { setPopups({timeInput: true}); }}/>
-      }
-    </React.Fragment>;
+      {modals.open === "timeInput" && <TimeInput />}
+      {modals.open === "createTeam" && <CreateTeam />}
+      {modals.open === "inviteLink" && <InviteLink teamId={modals.options.teamId} />}
+      <TimeInputFAB alt="Add Time" onClick={() => { openModal("timeInput"); }}/>
+    </React.Fragment>);
+
+  var loggedOutState = (
+    <LoginSignupPage
+      createAccountCallback={(email, password) => { return firebaseAppAuth.createUserWithEmailAndPassword(email, password);}}
+      loginCallback={(email, password) => { return firebaseAppAuth.signInWithEmailAndPassword(email, password); }}
+    />
+  );
+
+  var loadingState = (
+    <div>loading...</div>
+  );
+
+  var context = {
+    app: firebaseApp,
+    loading: loading,
+    error: error,
+    user: user,
+    db: db,
+    openModal: openModal,
+    closeModal: closeModal
+  }
+
+  if(!loading && user) {
+    const querystring = new URLSearchParams(window.location.search);  
+    const teamToJoin = querystring.get("joinTeam");
+    
+    if(teamToJoin && teamToJoin !== '') {
+      const teamQuery = db.collection("teams").doc(teamToJoin);
+
+      teamQuery.get().then((doc) => {
+        var teamExists = doc.exists;
+
+        if(teamExists) {
+          joinTeam(db, user.uid, teamToJoin);
+        } else {
+          return;
+        }
+      })
+    }
+  }
 
   return (
-    <FirebaseContext.Provider value={{app: firebaseApp, loading: loading, error: error, user: user, db: db}}>
+    <FirebaseContext.Provider value={context}>
       <AppWrapper>
-        {user
-          ?
-            loggedInState
-          :
-            <LoginSignupPage
-              createAccountCallback={createUserWithEmailAndPassword}
-              loginCallback={signInWithEmailAndPassword}
-            />
+        {loading ? loadingState :
+          user ? loggedInState : loggedOutState
         }
       </AppWrapper>
     </FirebaseContext.Provider>
@@ -81,15 +115,15 @@ const TimeInputFAB = Styled.button`
   height: 56px;
   width: 56px;
   border-radius: 28px;
-  background-color: #4F85E5;
+  background-color: ${Stz.colors.blue};
 
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z' fill='%23FFFFFF'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+  background-image: ${Stz.icons.plus};
   background-repeat: no-repeat;
   background-position: center center;
   box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12)
 `;
 
-export default withFirebaseAuth({
-  providers,
-  firebaseAppAuth
-})(CrosswordStats);
+// export default withFirebaseAuth({
+//   providers,
+//   firebaseAppAuth
+// })(CrosswordStats);

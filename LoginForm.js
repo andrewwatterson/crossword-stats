@@ -1,5 +1,6 @@
 import React from 'react';
-import {Form, InputGroup, SubmitButton} from './ui';
+
+import {Form, InputGroup, SubmitButton, FormError} from './ui';
 
 export default class LoginForm extends React.Component {
   constructor(props) {
@@ -7,7 +8,8 @@ export default class LoginForm extends React.Component {
 
     this.state = {
       login_username: '',
-      login_password: ''
+      login_password: '',
+      login_error: ''
     }
   }
 
@@ -19,13 +21,17 @@ export default class LoginForm extends React.Component {
     evt.preventDefault();
     this.props.loginCallback(this.state.login_username, this.state.login_password)
       .catch((error)=> {
+        this.setState({login_error: error.message});
         console.log(error.code, error.message);
-      })
+      });
   }
 
   render() {
+    const error = this.state.login_error !== '' ? this.state.login_error : null;
+
     return (
       <Form>
+        {error && <FormError>{error}</FormError>}
         <InputGroup>
           <label htmlFor="login_username">Email</label>
           <input name="login_username" id="login_username" type="text" onChange={(evt) => this.handleChange(evt)} />

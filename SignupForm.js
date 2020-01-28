@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {FirebaseContext} from './FirebaseContext';
-import {Form, InputGroup, SubmitButton} from './ui';
+import {Form, InputGroup, SubmitButton, FormError} from './ui';
 
 export default class SignupForm extends React.Component {
   constructor(props) {
@@ -10,7 +10,8 @@ export default class SignupForm extends React.Component {
     this.state = {
       register_name: '',
       register_username: '',
-      register_password: ''
+      register_password: '',
+      register_error: ''
     }
   }
 
@@ -30,14 +31,20 @@ export default class SignupForm extends React.Component {
           })
         }
       })
-      // .catch((err) => {console.log(err);});
+      .catch((error) => {
+        this.setState({register_error: error.message});
+        console.log(error.code, error.message);
+      });
 
 
   }
 
   render() {
+    const error = this.state.register_error !== '' ? this.state.register_error : null;
+
     return (
       <Form>
+        {error && <FormError>{error}</FormError>}
         <InputGroup>
           <label htmlFor="register_name">Display Name</label>
           <input name="register_name" id="register_name" type="text" onChange={(evt) => this.handleChange(evt)} />

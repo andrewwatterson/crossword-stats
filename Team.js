@@ -4,17 +4,22 @@ import cx from 'classnames';
 
 import {FirebaseContext} from './FirebaseContext';
 
+import * as Stz from './style';
+import {leaveTeam} from './db';
 import {prettyTimeFromSeconds, dayNames, nonNullMaxIndexFromArray, nonNullMinIndexFromArray} from './helpers';
 import {Card} from './ui';
+import DropdownMenu from './DropdownMenu';
 
 export default function Team(props) {
   const [times, setTimes] = useState({ timesByDay: null, totalWins: null, totalTime: null });
   const [teamInfo, setTeamInfo] = useState({ name: '', members: Array() });
   const context = useContext(FirebaseContext);
 
+  const {db, user, openModal} = context;
+  const {id} = props;
+
   useEffect(() => {
-    const {db} = context;
-    const {id} = props;
+
 
     var queries = Array();
     var newTeamInfo = {};
@@ -43,8 +48,7 @@ export default function Team(props) {
   }, [props.id]);
 
   useEffect(() => {
-    const {db, user} = context;
-    
+
     const {weekNo, weekNoYear} = props;
     const {members} = teamInfo;
 
@@ -93,10 +97,22 @@ export default function Team(props) {
 
   const {timesByDay, totalWins, totalTime} = times;
 
+  const dropdownOptions = [
+    {label: "Get Invite Link", action: () => { openModal("inviteLink", {teamId: id}) }},
+    {label: "Leave Team", action: () => { leaveTeam(db, user.uid, id) }}
+  ];
+
   return (
     <TeamScrollWrapper>
       <TeamCard>
-        <TeamTitle>{teamInfo.name}</TeamTitle>
+        <TitleRow>
+          <TeamTitle>{teamInfo.name}</TeamTitle>
+          <DropdownMenu
+            anchor={EllipsisButton}
+            options={dropdownOptions}
+          />
+        </TitleRow>
+
         <ResultsTable>
           <thead>
             <tr>
@@ -166,6 +182,14 @@ export default function Team(props) {
   );
 }
 
+const EllipsisButton = Styled.button`
+  height: 24px;
+  width: 24px;
+  margin-top: -4px;
+  background-image: ${Stz.icons.ellipsis};
+`;
+
+
 const TeamScrollWrapper = Styled.div`
   max-width: 100vw;
   overflow: auto;
@@ -187,11 +211,18 @@ const TeamCard = Styled(Card)`
   margin-left: 12px;
 `;
 
+const TitleRow = Styled.div`
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 12px;
+`;
+
 const TeamTitle = Styled.div`
   font-family: stymie, serif;
   font-size: 21px;
 
-  margin-bottom: 12px;
+  flex: 1 1 auto;
 `;
 
 const ResultsTable = Styled.table`
@@ -213,7 +244,7 @@ const ResultsTable = Styled.table`
 const TitleCell = Styled.td`
   padding: 0px 24px 0px 12px;
   text-align: right;
-  color: #999999;
+  color: ${Stz.colors.gray99};
 `;
 
 const NameCell = Styled.td`
@@ -241,7 +272,7 @@ const TimeContainer = Styled.div`
 `;
 
 const ShadedRow = Styled.tr`
-  background-color: #F5F5F5;
+  background-color: ${Stz.colors.grayF5};
 
   td:last-child {
     padding-right: 8px;
@@ -257,6 +288,6 @@ const ShadedRow = Styled.tr`
 
   ${TitleCell} {
     color: black;
-    background-color: #EBEBEB;
+    background-color: ${Stz.colors.grayEB};
   }
 `;

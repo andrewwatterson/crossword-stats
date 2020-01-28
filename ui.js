@@ -1,4 +1,5 @@
 import Styled from 'styled-components';
+import * as Stz from './style.js';
 
 export const AppWrapper = Styled.div`
   max-width: 100%;
@@ -25,7 +26,7 @@ export const Form = Styled.form`
 
   input[type=text], input[type=date], input[type=password] {
     border: none;
-    background-color: #EDF3FC;
+    background-color: ${Stz.colors.lightBlue};
     
     font-size: 20px;
     line-height: 32px;
@@ -47,12 +48,13 @@ export const InputGroup = Styled.div`
   }
 `;
 
-export const SubmitButton = Styled.button`
-  background-color: #4F85E5;
-  color: white;
+export const Button = Styled.button`
+  background-color: ${Stz.colors.white};
+  color: ${Stz.colors.blue};
+  border: 1px solid ${Stz.colors.blue};
+
   padding: 12px 0px;
   border-radius: 3px;
-  border: none;
 
   font-size: 16px;
   line-height: 24px;
@@ -62,9 +64,27 @@ export const SubmitButton = Styled.button`
   margin-top: 16px;
 `;
 
+export const SubmitButton = Styled(Button)`
+  background-color: ${Stz.colors.blue};
+  color: white;
+
+  margin-top: 16px;
+`;
+
+export const FormError = Styled.div`
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 20px;
+
+  color: ${Stz.colors.red}
+`;
+
 export const Card = Styled.div`
-  border-radius: 3px;
+  border-radius: ${Stz.radius.card};
   margin: 0px 24px;
-  max-width: 500px;
-  box-shadow: 0px 0px 4px 0px rgba(0,0,0,.25);
+  
+  max-width: 440px;
+  width: 100vw;
+
+  box-shadow: ${Stz.shadows.card};
 `;

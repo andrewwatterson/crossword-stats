@@ -1,94 +1,80 @@
-import React from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import cx from 'classnames';
 import Styled from 'styled-components';
+
+import { useDocumentData } from 'react-firebase-hooks/firestore';
+import {watchTeams} from './db';
 
 import Team from './Team';
 
 import {FirebaseContext} from './FirebaseContext';
 import {getPrettyDateFromWeekNumber, getWeekNumber} from './helpers';
 
-export default class MyTeams extends React.Component {
-  constructor(props) {
-    super(props);
+export default function MyTeams(props) {
+  var context = useContext(FirebaseContext);
 
-    const weekNumberObj = getWeekNumber(new Date());
+  const weekNumberObj = getWeekNumber(new Date());
 
-    this.state = {
-        teams: Array(),
-        weekNo: weekNumberObj.weekNo,
-        weekNoYear: weekNumberObj.weekNoYear
-    }
-  }
+  const [selectedDate, setSelectedDate] = useState({
+    weekNo: weekNumberObj.weekNo,
+    weekNoYear: weekNumberObj.weekNoYear
+  });
 
-  componentDidMount() {
-    const {db, user} = this.context;
+  const {db, user} = context;
 
-    const userId = user.uid;
-    
-    const query = db.collection("profile").doc(userId);
+  const userId = user.uid;
 
-    query.get().then((docSnapshot) => {
-      var newTeams = docSnapshot.data().teams;
+  const [userDoc, loading, error] = useDocumentData(db.collection("profile").doc(userId));
 
-      if(newTeams) {
-        this.setState({teams: newTeams});
-      }
-    });
-  }
-
-  prevWeek() {
-    if(this.state.weekNo === 1) {
-      this.setState({weekNoYear: this.state.weekNoYear - 1, weekNo: 52})
-    } else {
-      this.setState({weekNo: this.state.weekNo - 1})
-    }
-  }
-
-  nextWeekExists() {
+  function nextWeekExists() {
     const currentWeek = getWeekNumber(new Date());
 
-    return !(this.state.weekNo === currentWeek.weekNo && this.state.weekNoYear === currentWeek.weekNoYear)
+    return !(selectedDate.weekNo === currentWeek.weekNo && selectedDate.weekNoYear === currentWeek.weekNoYear)
   }
 
-  nextWeek() {
+  function prevWeek() {
+    if(selectedDate.weekNo === 1) {
+      setSelectedDate({weekNoYear: selectedDate.weekNoYear - 1, weekNo: 52})
+    } else {
+      setSelectedDate({weekNo: selectedDate.weekNo - 1, weekNoYear: selectedDate.weekNoYear})
+    }
+  }
 
-    if(this.nextWeekExists()) {
-      if(this.state.weekNo === 52) {
-        this.setState({weekNoYear: this.state.weekNoYear + 1, weekNo: 1});
+  function nextWeek() {
+
+    if(nextWeekExists()) {
+      if(selectedDate.weekNo === 52) {
+        setSelectedDate({weekNoYear: selectedDate.weekNoYear + 1, weekNo: 1});
       } else {
-        this.setState({weekNo: this.state.weekNo + 1});
+        setSelectedDate({weekNo: selectedDate.weekNo + 1, weekNoYear: selectedDate.weekNoYear});
       }
     }
   }
 
-  render() {
-    const {weekNo, weekNoYear} = this.state;
-    
-    const nextWeekExists = this.nextWeekExists();
-    return (
-      <div className="teams">
-        <DateRow>
-          <LeftArrow href="#" onClick={() => { this.prevWeek(); }} alt="Previous Week"></LeftArrow>
-          <div className="weekNumber">Week of {getPrettyDateFromWeekNumber(weekNo, weekNoYear)}</div>
-          <RightArrow href="#" className={cx({'disabled': !nextWeekExists})} onClick={() => { this.nextWeek(); }} alt="Next Week"></RightArrow>
-        </DateRow>
-        {this.state.teams && this.state.teams.map((team) => {
-            return <Team {...{
-              key: team,
-              weekNo,
-              weekNoYear,
-              id: team
-            }} />
-        })}
-        {this.state.teams && this.state.teams.length == 0 &&
-          <div>join some teams!</div>
-        }
-      </div>
-    );
-  }
-}
+  const teams = userDoc && userDoc.teams;
+  const {weekNo, weekNoYear} = selectedDate;
 
-MyTeams.contextType = FirebaseContext;
+  return (
+    <div className="teams">
+      <DateRow>
+        <LeftArrow href="#" onClick={prevWeek} alt="Previous Week"></LeftArrow>
+        <div className="weekNumber">Week of {getPrettyDateFromWeekNumber(weekNo, weekNoYear)}</div>
+        <RightArrow href="#" className={cx({'disabled': !nextWeekExists()})} onClick={nextWeek} alt="Next Week"></RightArrow>
+      </DateRow>
+      {teams && teams.map((team) => {
+        return <Team {...{
+          key: team,
+          weekNo,
+          weekNoYear,
+          id: team
+        }} />
+      })}
+      {teams && teams.length == 0 &&
+        <div>join some teams!</div>
+      }
+    </div>
+  );
+}
 
 const DateRow = Styled.div`
   font-family: stymie, serif;
