@@ -1,10 +1,9 @@
 import React from 'react';
-import Styled from 'styled-components';
 
 import {FirebaseContext} from './FirebaseContext';
 
 import {parseTimeWithCheck, parseHumanDateToCrosswordDateObject} from './helpers';
-import {Form, InputGroup, SubmitButton} from './ui';
+import {InputGroup, SubmitButton} from './ui';
 import {Modal, ModalForm} from './Modal';
 
 export default class TimeInput extends React.Component {
@@ -12,9 +11,12 @@ export default class TimeInput extends React.Component {
   constructor(props) {
     super(props);
 
+    const today = new Date();
+    const todayAsInputString = today.toJSON().slice(0,10);
+
     this.state = {
         timeinput_time: '',
-        timeinput_date: ''
+        timeinput_date: todayAsInputString
     }
   }
 
@@ -28,7 +30,7 @@ export default class TimeInput extends React.Component {
     var parsedTime = parseTimeWithCheck(this.state.timeinput_time);
     var parsedTimestamp = parseHumanDateToCrosswordDateObject(this.state.timeinput_date);
 
-    const {db, user} = this.context;
+    const {db, user, closeModal} = this.context;
 
     const userId = user.uid;
 
@@ -45,25 +47,26 @@ export default class TimeInput extends React.Component {
 
       dupQuery.get().then((querySnapshot) => {
         if(querySnapshot.size > 0) {
+          
+          var previousTimes = Array();
+          
           querySnapshot.forEach((doc) => {
-            db.collection("times").doc(doc.id).update({time: parsedTime});
-            this.props.closeModalCallback();
+            previousTimes.push(db.collection("times").doc(doc.id).delete());
           });
-        } else {
-          const query = db.collection("times").add({
-            time: parsedTime,
-            user: userId,
-            ...parsedTimestamp
-          }).then(this.props.closeModalCallback);
+
+          return Promise.all(previousTimes);
         }
-      })
+      }).then(() => {
+        return db.collection("times").add({
+          time: parsedTime,
+          user: userId,
+          ...parsedTimestamp
+        }).catch((err) => console.log(err))
+      }).then(closeModal);
     }
   }
 
   render() {
-
-    const today = new Date();
-    const todayAsInputString = today.toJSON().slice(0,10);
 
     return (
       <Modal
@@ -72,7 +75,7 @@ export default class TimeInput extends React.Component {
         <ModalForm>
           <InputGroup>
             <label htmlFor="timeinput_date">Date</label>
-            <input name="timeinput_date" type="date" id="timeinput_date" value={todayAsInputString} onChange={(evt) => this.handleChange(evt)} />
+            <input name="timeinput_date" type="date" id="timeinput_date" defaultValue={this.state.timeinput_date} onChange={(evt) => this.handleChange(evt)} />
           </InputGroup>
           <InputGroup>
             <label htmlFor="timeinput_time">Time</label>
