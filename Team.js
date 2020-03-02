@@ -6,7 +6,7 @@ import {FirebaseContext} from './FirebaseContext';
 
 import * as Stz from './style';
 import {leaveTeam} from './db';
-import {prettyTimeFromSeconds, dayNames, nonNullMaxIndexFromArray, nonNullMinIndexFromArray} from './helpers';
+import {prettyTimeFromSeconds, dayNames, nonNullMaxIndicesFromArray, nonNullMinIndicesFromArray} from './helpers';
 import {Card} from './ui';
 import DropdownMenu from './DropdownMenu';
 
@@ -86,7 +86,11 @@ export default function Team(props) {
         })
   
         for(d in timesByDay) {
-          totalWins[nonNullMinIndexFromArray(timesByDay[d])]++;
+          var dayWinners = nonNullMinIndicesFromArray(timesByDay[d]);
+
+          for (var win in dayWinners) {
+            totalWins[dayWinners[win]]++;
+          }
         }
   
         setTimes({timesByDay: timesByDay, totalWins: totalWins, totalTime: totalTime});
@@ -125,15 +129,19 @@ export default function Team(props) {
               <TitleCell className="shaded">Wins</TitleCell>
               {teamInfo.members.map((m, i) => {
 
-                var fewestWins = nonNullMinIndexFromArray(totalWins);
-                var mostWins = nonNullMaxIndexFromArray(totalWins);
+                var fewestWins = nonNullMinIndicesFromArray(totalWins);
+                var mostWins = nonNullMaxIndicesFromArray(totalWins);
 
                 return (
                   <TimeCell key={i}>
                     <TimeContainer
                       className={cx({
-                        'standing-lowest': Number(fewestWins) === Number(i),
-                        'standing-highest': Number(mostWins) === Number(i)
+                        'standing-lowest': fewestWins.length === 1 && fewestWins.indexOf(String(i)) !== -1,
+                        'standing-highest': mostWins.length === 1 && mostWins.indexOf(String(i)) !== -1,
+                        'standing-tie': 
+                          (fewestWins.length > 1 && fewestWins.indexOf(String(i)) !== -1) ||
+                          (mostWins.length > 1 && mostWins.indexOf(String(i)) !== -1)
+                        
                       })}
                     >
                       {totalWins && totalWins[i]}
@@ -152,8 +160,8 @@ export default function Team(props) {
 
             {timesByDay && Object.keys(timesByDay).map((day) => {
 
-                var min = nonNullMinIndexFromArray(timesByDay[day]);
-                var max = nonNullMaxIndexFromArray(timesByDay[day]);
+                var min = nonNullMinIndicesFromArray(timesByDay[day]);
+                var max = nonNullMaxIndicesFromArray(timesByDay[day]);
                 return (
                     <tr key={day}>
                       <TitleCell>{dayNames()[day]}</TitleCell>
@@ -162,8 +170,11 @@ export default function Team(props) {
                           <TimeCell key={day + "-" + i}>
                             <TimeContainer
                               className={cx({
-                                'standing-lowest': Number(max) === Number(i),
-                                'standing-highest': Number(min) === Number(i)
+                                'standing-lowest': max.length === 1 && max.indexOf(String(i)) !== -1,
+                                'standing-highest': min.length === 1 && min.indexOf(String(i)) !== -1,
+                                'standing-tie':
+                                  (min.length > 1 && min.indexOf(String(i)) !== -1) ||
+                                  (max.length > 1 && max.indexOf(String(i)) !== -1),
                               })}
                             >
                               {member && prettyTimeFromSeconds(member)}
@@ -263,11 +274,15 @@ const TimeContainer = Styled.div`
   line-height: 28px;
 
   &.standing-lowest {
-    background-color: #FAD5DE;
+    background-color: ${Stz.colors.lightRed};
+  }
+
+  &.standing-tie {
+    background-color: ${Stz.colors.lightYellow};
   }
 
   &.standing-highest {
-    background-color: #D4F5E2;
+    background-color: ${Stz.colors.lightGreen};
   }
 `;
 

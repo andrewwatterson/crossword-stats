@@ -10,6 +10,9 @@ const colors = {
 
   red: "#E52E5C",
 
+  lightGreen: "#D4F5E2",
+  lightRed: "#FAD5DE",
+  lightYellow: "#F7EBC4"
 };
 
 const icons = {

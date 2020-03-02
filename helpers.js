@@ -107,19 +107,37 @@ export function parseHumanDateToFirebaseTimestamp(timestamp) {
     }
 }
 
-export function nonNullMinIndexFromArray(arr) {
-    var min;
+export function nonNullMinIndicesFromArray(arr) {
+    var min = Array();
     for(var a in arr) {
-        if(arr[a] && (min == null || arr[a] < arr[min])) { min = a; }
+        if(arr[a]) {
+            if(min.length == 0) {
+                min[0] = a;
+            } else if(arr[a] < arr[min[0]]) {
+                var newMin = [a];
+                min = newMin;
+            } else if(arr[a] == arr[min[0]]) {
+                min.push(a);
+            }
+        }
     }
 
     return min;
 }
 
-export function nonNullMaxIndexFromArray(arr) {
-    var max;
+export function nonNullMaxIndicesFromArray(arr) {
+    var max = Array();
     for(var a in arr) {
-        if(arr[a] && (max == null || arr[a] > arr[max])) { max = a; }
+        if(arr[a]) {
+            if(max.length == 0) {
+                max[0] = a;
+            } else if(arr[a] > arr[max[0]]) {
+                var newMax = [a];
+                max = newMax;
+            } else if(arr[a] == arr[max[0]]) {
+                max.push(a);
+            }
+        }
     }
 
     return max;
