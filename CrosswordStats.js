@@ -11,6 +11,7 @@ import secrets from './webSecrets';
 
 import * as Stz from './style.js';
 import {AppWrapper, AppContent} from './ui';
+import {joinTeam} from './db';
 
 import LoginSignupPage from './LoginSignupPage';
 import AppHeader from './AppHeader';
