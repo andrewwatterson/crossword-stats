@@ -9,3 +9,8 @@ button {
   outline: none;
   background: none;
 }
+
+@keyframes loader {
+  from { color: white; }
+  to { color: black; }
+}
