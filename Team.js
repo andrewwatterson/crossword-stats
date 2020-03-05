@@ -220,6 +220,9 @@ const TeamCard = Styled(Card)`
   padding: 20px;
   margin: 0px;
   margin-left: 12px;
+
+  max-width: none;
+  width: auto;
 `;
 
 const TitleRow = Styled.div`

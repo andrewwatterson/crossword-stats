@@ -56,11 +56,16 @@ export default function MyTeams(props) {
 
   return (
     <div className="teams">
-      <DateRow>
-        <LeftArrow href="#" onClick={prevWeek} alt="Previous Week"></LeftArrow>
-        <div className="weekNumber">Week of {getPrettyDateFromWeekNumber(weekNo, weekNoYear)}</div>
-        <RightArrow href="#" className={cx({'disabled': !nextWeekExists()})} onClick={nextWeek} alt="Next Week"></RightArrow>
-      </DateRow>
+      {teams &&
+        <DateRow>
+          <LeftArrow href="#" onClick={prevWeek} alt="Previous Week"></LeftArrow>
+          <div className="weekNumber">Week of {getPrettyDateFromWeekNumber(weekNo, weekNoYear)}</div>
+          <RightArrow href="#" className={cx({'disabled': !nextWeekExists()})} onClick={nextWeek} alt="Next Week"></RightArrow>
+        </DateRow>
+      }
+      {teams === undefined && 
+        <div>you don't have any teams</div>
+      }
       {teams && teams.map((team) => {
         return <Team {...{
           key: team,
