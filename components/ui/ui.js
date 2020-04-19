@@ -66,6 +66,10 @@ export const Button = Styled.button`
   text-transform: uppercase;
 
   margin-top: 16px;
+
+  &[disabled] {
+    opacity: .75;
+  }
 `;
 
 export const SubmitButton = Styled(Button)`

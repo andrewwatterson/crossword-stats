@@ -3,7 +3,7 @@ import React from 'react';
 import {FirebaseContext} from '../FirebaseContext';
 
 import {parseTimeWithCheck, parseHumanDateToCrosswordDateObject} from '../helpers';
-import {InputGroup, SubmitButton} from './ui/ui';
+import {FormError, InputGroup, SubmitButton} from './ui/ui';
 import {Modal, ModalForm} from './ui/Modal';
 
 export default class TimeInput extends React.Component {
@@ -15,8 +15,10 @@ export default class TimeInput extends React.Component {
     const todayAsInputString = today.toJSON().slice(0,10);
 
     this.state = {
-        timeinput_time: '',
-        timeinput_date: todayAsInputString
+      timeinput_time: '',
+      timeinput_date: todayAsInputString,
+      timeinput_disabled: false,
+      timeinput_error: null
     }
   }
 
@@ -26,6 +28,7 @@ export default class TimeInput extends React.Component {
 
   addTime(evt) {
     evt.preventDefault();
+    this.setState({timeinput_disabled: true, timeinput_error: null});
 
     var parsedTime = parseTimeWithCheck(this.state.timeinput_time);
     var parsedTimestamp = parseHumanDateToCrosswordDateObject(this.state.timeinput_date);
@@ -36,6 +39,10 @@ export default class TimeInput extends React.Component {
 
     if(parsedTime === null || parsedTimestamp === null) {
         console.log('value error!', parsedTime, parsedTimestamp);
+        this.setState({
+          timeinput_error: "Please enter your time as either MM:SS or HH:MM:SS",
+          timeinput_disabled: false
+        })
     } else {
       console.log('committing', parsedTime, parsedTimestamp);
       
@@ -73,6 +80,7 @@ export default class TimeInput extends React.Component {
         title="Add a time"
       >
         <ModalForm>
+          {this.state.timeinput_error && <FormError>{this.state.timeinput_error}</FormError>}
           <InputGroup>
             <label htmlFor="timeinput_date">Date</label>
             <input name="timeinput_date" type="date" id="timeinput_date" defaultValue={this.state.timeinput_date} onChange={(evt) => this.handleChange(evt)} />
@@ -81,7 +89,7 @@ export default class TimeInput extends React.Component {
             <label htmlFor="timeinput_time">Time</label>
             <input name="timeinput_time" type="text" id="timeinput_time" onChange={(evt) => this.handleChange(evt)} />
           </InputGroup>
-          <SubmitButton onClick={(evt) => {this.addTime(evt)}}>Add Time</SubmitButton>
+          <SubmitButton disabled={this.state.timeinput_disabled} onClick={(evt) => {this.addTime(evt)}}>Add Time</SubmitButton>
         </ModalForm>
       </Modal>
     );
