@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {FirebaseContext} from './FirebaseContext';
+import {FirebaseContext} from '../FirebaseContext';
 
-import {parseTimeWithCheck, parseHumanDateToCrosswordDateObject} from './helpers';
-import {InputGroup, SubmitButton} from './ui';
-import {Modal, ModalForm} from './Modal';
+import {parseTimeWithCheck, parseHumanDateToCrosswordDateObject} from '../helpers';
+import {InputGroup, SubmitButton} from './ui/ui';
+import {Modal, ModalForm} from './ui/Modal';
 
 export default class TimeInput extends React.Component {
   

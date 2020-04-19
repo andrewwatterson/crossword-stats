@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Styled from 'styled-components';
 import cx from 'classnames';
 
-import {AppContent, Card} from './ui';
+import {AppContent, Card} from './ui/ui';
 
 import SignupForm from './SignupForm';
 import LoginForm from './LoginForm';

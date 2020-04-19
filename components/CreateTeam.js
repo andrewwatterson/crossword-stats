@@ -1,11 +1,11 @@
 import React, {useState, useContext} from 'react';
 
-import {createTeam, joinTeam} from './db';
+import {createTeam, joinTeam} from '../db';
 
-import {Modal, ModalForm} from './Modal';
-import {InputGroup, SubmitButton} from './ui';
+import {Modal, ModalForm} from './ui/Modal';
+import {InputGroup, SubmitButton} from './ui/ui';
 
-import {FirebaseContext} from './FirebaseContext';
+import {FirebaseContext} from '../FirebaseContext';
 
 export default function CreateTeam(props) {
 

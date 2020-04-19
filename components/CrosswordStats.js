@@ -6,12 +6,12 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 
-import {FirebaseContext} from './FirebaseContext';
-import secrets from './webSecrets';
+import {FirebaseContext} from '../FirebaseContext';
+import secrets from '../webSecrets';
 
-import * as Stz from './style.js';
-import {AppWrapper, AppContent} from './ui';
-import {joinTeam} from './db';
+import * as Stz from '../style.js';
+import {AppWrapper, AppContent} from './ui/ui';
+import {joinTeam} from '../db';
 
 import LoginSignupPage from './LoginSignupPage';
 import AppHeader from './AppHeader';
@@ -21,7 +21,7 @@ import CreateTeam from './CreateTeam';
 import InviteLink from './InviteLink';
 import MyTeams from './MyTeams';
 
-import './crossword-stats.css';
+import '../crossword-stats.css';
 
 const firebaseConfig = secrets.firebaseWebConfig;
 

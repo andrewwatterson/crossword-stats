@@ -2,13 +2,13 @@ import React, { useState, useEffect, useContext}  from 'react';
 import Styled from 'styled-components';
 import cx from 'classnames';
 
-import {FirebaseContext} from './FirebaseContext';
+import {FirebaseContext} from '../FirebaseContext';
 
-import * as Stz from './style';
-import {leaveTeam} from './db';
-import {prettyTimeFromSeconds, dayNames, nonNullMaxIndicesFromArray, nonNullMinIndicesFromArray} from './helpers';
-import {Card} from './ui';
-import DropdownMenu from './DropdownMenu';
+import * as Stz from '../style';
+import {leaveTeam} from '../db';
+import {prettyTimeFromSeconds, dayNames, nonNullMaxIndicesFromArray, nonNullMinIndicesFromArray} from '../helpers';
+import {Card} from './ui/ui';
+import DropdownMenu from './ui/DropdownMenu';
 
 export default function Team(props) {
   const [times, setTimes] = useState({ timesByDay: null, totalWins: null, totalTime: null });

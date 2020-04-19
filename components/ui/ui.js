@@ -1,5 +1,5 @@
 import Styled from 'styled-components';
-import * as Stz from './style.js';
+import * as Stz from '../../style.js';
 
 export const AppWrapper = Styled.div`
   max-width: 100%;

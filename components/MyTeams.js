@@ -3,12 +3,12 @@ import cx from 'classnames';
 import Styled from 'styled-components';
 
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import {watchTeams} from './db';
+import {watchTeams} from '../db';
 
 import Team from './Team';
 
-import {FirebaseContext} from './FirebaseContext';
-import {getPrettyDateFromWeekNumber, getWeekNumber} from './helpers';
+import {FirebaseContext} from '../FirebaseContext';
+import {getPrettyDateFromWeekNumber, getWeekNumber} from '../helpers';
 
 export default function MyTeams(props) {
   var context = useContext(FirebaseContext);

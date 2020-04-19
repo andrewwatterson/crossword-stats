@@ -3,7 +3,7 @@ import Styled from 'styled-components';
 
 import EventListener from 'react-event-listener';
 
-import * as Stz from './style';
+import * as Stz from '../../style';
 
 export default class DropdownMenu extends React.PureComponent {
   constructor(props) {

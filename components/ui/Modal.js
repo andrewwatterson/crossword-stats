@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import Styled from 'styled-components';
 
-import {FirebaseContext} from './FirebaseContext';
+import {FirebaseContext} from '../../FirebaseContext';
 
 import {Form} from './ui';
-import * as Stz from './style.js';
+import * as Stz from '../../style.js';
 
 function Modal(props) {
 

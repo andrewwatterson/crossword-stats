@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {FirebaseContext} from './FirebaseContext';
+import {FirebaseContext} from '../FirebaseContext';
 
-import {prettyTimeFromSeconds, shortDateFromCrosswordDate} from './helpers';
+import {prettyTimeFromSeconds, shortDateFromCrosswordDate} from '../helpers';
 
 function TimeRow(props) {
   const rowDate = {

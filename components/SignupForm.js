@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {FirebaseContext} from './FirebaseContext';
-import {Form, InputGroup, SubmitButton, FormError} from './ui';
+import {FirebaseContext} from '../FirebaseContext';
+import {Form, InputGroup, SubmitButton, FormError} from './ui/ui';
 
 export default class SignupForm extends React.Component {
   constructor(props) {

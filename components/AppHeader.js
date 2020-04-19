@@ -2,9 +2,9 @@ import React, {useContext, useState} from 'react';
 import Styled from 'styled-components';
 import cx from 'classnames';
 
-import * as Stz from './style.js';
+import * as Stz from '../style.js';
 
-import {FirebaseContext} from './FirebaseContext';
+import {FirebaseContext} from '../FirebaseContext';
 
 function HeaderButton(props) {
   return(

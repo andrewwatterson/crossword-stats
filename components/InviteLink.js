@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {Modal, ModalForm} from './Modal';
-import {Button, InputGroup} from './ui';
+import {Modal, ModalForm} from './ui/Modal';
+import {Button, InputGroup} from './ui/ui';
 
 export default function InviteLink(props) {
 

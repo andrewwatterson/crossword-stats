@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Form, InputGroup, SubmitButton, FormError} from './ui';
+import {Form, InputGroup, SubmitButton, FormError} from './ui/ui';
 
 export default class LoginForm extends React.Component {
   constructor(props) {

@@ -3,7 +3,7 @@ import 'firebase/firestore';
 
 import sampleData from './sampleData.json';
 
-import {parseTime, parseHumanDateToCrosswordDateObject} from './helpers';
+import {parseTime, parseHumanDateToCrosswordDateObject} from '../helpers';
 
 import secrets from './secrets';
 
