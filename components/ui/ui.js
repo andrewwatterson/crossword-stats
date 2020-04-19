@@ -14,6 +14,9 @@ export const AppContent = Styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  min-height: 100vh;
+  box-sizing: border-box;
 `;
 
 export const Form = Styled.form`

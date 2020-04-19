@@ -3,8 +3,8 @@ import cx from 'classnames';
 import Styled from 'styled-components';
 
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import {watchTeams} from '../db';
 
+import {Loader, LoaderWrapper} from './ui/Loader';
 import Team from './Team';
 
 import {FirebaseContext} from '../FirebaseContext';
@@ -55,29 +55,35 @@ export default function MyTeams(props) {
   const {weekNo, weekNoYear} = selectedDate;
 
   return (
-    <div className="teams">
-      {teams &&
-        <DateRow>
-          <LeftArrow href="#" onClick={prevWeek} alt="Previous Week"></LeftArrow>
-          <div className="weekNumber">Week of {getPrettyDateFromWeekNumber(weekNo, weekNoYear)}</div>
-          <RightArrow href="#" className={cx({'disabled': !nextWeekExists()})} onClick={nextWeek} alt="Next Week"></RightArrow>
-        </DateRow>
-      }
-      {teams === undefined && 
-        <div>you don't have any teams</div>
-      }
-      {teams && teams.map((team) => {
-        return <Team {...{
-          key: team,
-          weekNo,
-          weekNoYear,
-          id: team
-        }} />
-      })}
-      {teams && teams.length == 0 &&
-        <div>join some teams!</div>
-      }
-    </div>
+    loading
+      ?
+        <LoaderWrapper>
+          <Loader />
+        </LoaderWrapper>
+      :
+        <div className="teams">
+        {teams &&
+          <DateRow>
+            <LeftArrow href="#" onClick={prevWeek} alt="Previous Week"></LeftArrow>
+            <div className="weekNumber">Week of {getPrettyDateFromWeekNumber(weekNo, weekNoYear)}</div>
+            <RightArrow href="#" className={cx({'disabled': !nextWeekExists()})} onClick={nextWeek} alt="Next Week"></RightArrow>
+          </DateRow>
+        }
+        {teams === undefined && 
+          <div>you don't have any teams</div>
+        }
+        {teams && teams.map((team) => {
+          return <Team {...{
+            key: team,
+            weekNo,
+            weekNoYear,
+            id: team
+          }} />
+        })}
+        {teams && teams.length == 0 &&
+          <div>join some teams!</div>
+        }
+      </div>
   );
 }
 
