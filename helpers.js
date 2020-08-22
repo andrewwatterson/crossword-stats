@@ -155,7 +155,7 @@ export function nonNullMaxIndicesFromArray(arr) {
  */
 export function mapArrayToRank(input) {
     var retArray = [];
-    var values = input.filter(x => x);
+    if(input) { var values = input.filter(x => x); }
     for (var i in input) {
         // Handle sparse arrays
         if (input[i]) {
