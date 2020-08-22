@@ -100,6 +100,7 @@ export default function Team(props) {
   }, [props.weekNo, teamInfo.members]);
 
   const {timesByDay, totalWins, totalTime} = times;
+  const winsRanks = mapArrayToRank(totalWins);
 
   const dropdownOptions = [
     {label: "Get Invite Link", action: () => { openModal("inviteLink", {teamId: id}) }},
@@ -128,20 +129,16 @@ export default function Team(props) {
             <ShadedRow className="times-row">
               <TitleCell className="shaded">Wins</TitleCell>
               {teamInfo.members.map((m, i) => {
-
-                var fewestWins = nonNullMinIndicesFromArray(totalWins);
-                var mostWins = nonNullMaxIndicesFromArray(totalWins);
+                winsRank = winsRanks[i];
 
                 return (
                   <TimeCell key={i}>
                     <TimeContainer
                       className={cx({
-                        'standing-lowest': fewestWins.length === 1 && fewestWins.indexOf(String(i)) !== -1,
-                        'standing-highest': mostWins.length === 1 && mostWins.indexOf(String(i)) !== -1,
-                        'standing-tie': 
-                          (fewestWins.length > 1 && fewestWins.indexOf(String(i)) !== -1) ||
-                          (mostWins.length > 1 && mostWins.indexOf(String(i)) !== -1)
-                        
+                        'standing-first': winsRank === 1,
+                        'standing-second': winsRank === 2,
+                        'standing-third': winsRank === 3,
+                        'is-tie': winsRanks.firstIndexOf(winsRank) !== winsRanks.lastIndexOf(winsRank)
                       })}
                     >
                       {totalWins && totalWins[i]}
@@ -159,22 +156,20 @@ export default function Team(props) {
           <tbody>
 
             {timesByDay && Object.keys(timesByDay).map((day) => {
-
-                var min = nonNullMinIndicesFromArray(timesByDay[day]);
-                var max = nonNullMaxIndicesFromArray(timesByDay[day]);
+                var dayRanks = mapArrayToRank(timesByDay[day]);
                 return (
                     <tr key={day}>
                       <TitleCell>{dayNames()[day]}</TitleCell>
                       {timesByDay[day].map((member, i) => {
+                        dayRank = dayRanks[i];
                         return (
                           <TimeCell key={day + "-" + i}>
                             <TimeContainer
                               className={cx({
-                                'standing-lowest': max.length === 1 && max.indexOf(String(i)) !== -1,
-                                'standing-highest': min.length === 1 && min.indexOf(String(i)) !== -1,
-                                'standing-tie':
-                                  (min.length > 1 && min.indexOf(String(i)) !== -1) ||
-                                  (max.length > 1 && max.indexOf(String(i)) !== -1),
+                                'standing-first': dayRank === 1,
+                                'standing-second': dayRank === 2,
+                                'standing-third': dayRank === 3,
+                                'is-tie': dayRanks.firstIndexOf(dayRank) !== dayRanks.lastIndexOf(dayRank)
                               })}
                             >
                               {member && prettyTimeFromSeconds(member)}
@@ -276,16 +271,20 @@ const TimeContainer = Styled.div`
   height: 28px;
   line-height: 28px;
 
-  &.standing-lowest {
-    background-color: ${Stz.colors.lightRed};
+  &.standing-first {
+    background-color: ${Stz.colors.gold};
   }
 
-  &.standing-tie {
-    background-color: ${Stz.colors.lightYellow};
+  &.standing-second {
+    background-color: ${Stz.colors.silver};
   }
 
-  &.standing-highest {
-    background-color: ${Stz.colors.lightGreen};
+  &.standing-third {
+    background-color: ${Stz.colors.bronze};
+  }
+
+  &.is-tie {
+    font-weight: bold;
   }
 `;
 
