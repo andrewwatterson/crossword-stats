@@ -142,3 +142,30 @@ export function nonNullMaxIndicesFromArray(arr) {
 
     return max;
 }
+
+/**
+ * Given sparse input array of sortable elements,
+ * return new array of those elements' 1-indexed rank within that collection.
+ * Spare elements are returned as null
+ *
+ * O(n^2) but if these are getting used for times it should be fine
+ * and handles ties nicelyo
+ *
+ * e.g. [400, null, 100, 100, 200] > [4, null, 1, 1, 3]
+ */
+export function mapArrayToRank(input) {
+    var retArray = [];
+    var values = input.filter(x => x);
+    for (var i in input) {
+        // Handle sparse arrays
+        if (input[i]) {
+            retArray.push(
+                // 1 + for 1-indexing
+                1 + values.filter(x => x < input[i]).length
+            );
+        } else {
+            retArray.push(null);
+        }
+    }
+    return retArray;
+}
