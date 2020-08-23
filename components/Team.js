@@ -100,7 +100,7 @@ export default function Team(props) {
   }, [props.weekNo, teamInfo.members]);
 
   const {timesByDay, totalWins, totalTime} = times;
-  const winsRanks = mapArrayToRank(totalWins);
+  const winsRanks = mapArrayToRank(totalWins, true);
 
   const dropdownOptions = [
     {label: "Get Invite Link", action: () => { openModal("inviteLink", {teamId: id}) }},
