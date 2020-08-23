@@ -14,9 +14,9 @@ const colors = {
   lightRed: "#FAD5DE",
   lightYellow: "#F7EBC4",
 
-  gold: "#FEDC34",
-  silver: "#CDCBCB",
-  bronze: "#BE884B"
+  gold: "#FFF3CC",
+  silver: "#EBEBEB",
+  bronze: "#ECCBBF"
 };
 
 const icons = {
