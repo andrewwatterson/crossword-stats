@@ -107,6 +107,24 @@ export function parseHumanDateToFirebaseTimestamp(timestamp) {
     }
 }
 
+export function nonNullMinIndicesFromArray(arr) {
+    var min = Array();
+    for(var a in arr) {
+        if(arr[a]) {
+            if(min.length == 0) {
+                min[0] = a;
+            } else if(arr[a] < arr[min[0]]) {
+                var newMin = [a];
+                min = newMin;
+            } else if(arr[a] == arr[min[0]]) {
+                min.push(a);
+            }
+        }
+    }
+
+    return min;
+}
+
 /**
  * Given sparse input array of sortable elements,
  * return new array of those elements' 1-indexed rank within that collection.
