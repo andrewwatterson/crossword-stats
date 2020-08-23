@@ -125,24 +125,6 @@ export function nonNullMinIndicesFromArray(arr) {
     return min;
 }
 
-export function nonNullMaxIndicesFromArray(arr) {
-    var max = Array();
-    for(var a in arr) {
-        if(arr[a]) {
-            if(max.length == 0) {
-                max[0] = a;
-            } else if(arr[a] > arr[max[0]]) {
-                var newMax = [a];
-                max = newMax;
-            } else if(arr[a] == arr[max[0]]) {
-                max.push(a);
-            }
-        }
-    }
-
-    return max;
-}
-
 /**
  * Given sparse input array of sortable elements,
  * return new array of those elements' 1-indexed rank within that collection.
@@ -153,16 +135,23 @@ export function nonNullMaxIndicesFromArray(arr) {
  *
  * e.g. [400, null, 100, 100, 200] > [4, null, 1, 1, 3]
  */
-export function mapArrayToRank(input) {
+export function mapArrayToRank(input, descending = false) {
     var retArray = [];
     if (input) { var values = input.filter(x => x); }
     for (var i in input) {
         // Handle sparse arrays
         if (input[i]) {
-            retArray.push(
-                // 1 + for 1-indexing
-                1 + values.filter(x => x < input[i]).length
-            );
+            if (descending) {
+                // If descending, rank is number of values greater than you
+                retArray.push(
+                    // 1 + for 1-indexing
+                    1 + values.filter(x => x > input[i]).length
+                );
+            } else {
+                retArray.push(
+                    1 + values.filter(x => x < input[i]).length
+                );
+            }
         } else {
             retArray.push(null);
         }

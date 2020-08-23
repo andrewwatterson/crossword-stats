@@ -6,7 +6,7 @@ import {FirebaseContext} from '../FirebaseContext';
 
 import * as Stz from '../style';
 import {leaveTeam} from '../db';
-import {prettyTimeFromSeconds, dayNames, mapArrayToRank, nonNullMaxIndicesFromArray, nonNullMinIndicesFromArray} from '../helpers';
+import {prettyTimeFromSeconds, dayNames, mapArrayToRank, nonNullMinIndicesFromArray} from '../helpers';
 import {Card} from './ui/ui';
 import DropdownMenu from './ui/DropdownMenu';
 
@@ -100,7 +100,7 @@ export default function Team(props) {
   }, [props.weekNo, teamInfo.members]);
 
   const {timesByDay, totalWins, totalTime} = times;
-  const winsRanks = mapArrayToRank(totalWins);
+  const winsRanks = mapArrayToRank(totalWins, true);
 
   const dropdownOptions = [
     {label: "Get Invite Link", action: () => { openModal("inviteLink", {teamId: id}) }},
