@@ -6,7 +6,7 @@ import {FirebaseContext} from '../FirebaseContext';
 
 import * as Stz from '../style';
 import {leaveTeam} from '../db';
-import {prettyTimeFromSeconds, dayNames, nonNullMaxIndicesFromArray, nonNullMinIndicesFromArray} from '../helpers';
+import {prettyTimeFromSeconds, dayNames, mapArrayToRank, nonNullMaxIndicesFromArray, nonNullMinIndicesFromArray} from '../helpers';
 import {Card} from './ui/ui';
 import DropdownMenu from './ui/DropdownMenu';
 
@@ -129,7 +129,7 @@ export default function Team(props) {
             <ShadedRow className="times-row">
               <TitleCell className="shaded">Wins</TitleCell>
               {teamInfo.members.map((m, i) => {
-                winsRank = winsRanks[i];
+                const winsRank = winsRanks[i];
 
                 return (
                   <TimeCell key={i}>
@@ -138,7 +138,7 @@ export default function Team(props) {
                         'standing-first': winsRank === 1,
                         'standing-second': winsRank === 2,
                         'standing-third': winsRank === 3,
-                        'is-tie': winsRanks.firstIndexOf(winsRank) !== winsRanks.lastIndexOf(winsRank)
+                        'is-tie': winsRanks.indexOf(winsRank) !== winsRanks.lastIndexOf(winsRank)
                       })}
                     >
                       {totalWins && totalWins[i]}
@@ -161,7 +161,7 @@ export default function Team(props) {
                     <tr key={day}>
                       <TitleCell>{dayNames()[day]}</TitleCell>
                       {timesByDay[day].map((member, i) => {
-                        dayRank = dayRanks[i];
+                        const dayRank = dayRanks[i];
                         return (
                           <TimeCell key={day + "-" + i}>
                             <TimeContainer
@@ -169,7 +169,7 @@ export default function Team(props) {
                                 'standing-first': dayRank === 1,
                                 'standing-second': dayRank === 2,
                                 'standing-third': dayRank === 3,
-                                'is-tie': dayRanks.firstIndexOf(dayRank) !== dayRanks.lastIndexOf(dayRank)
+                                'is-tie': dayRanks.indexOf(dayRank) !== dayRanks.lastIndexOf(dayRank)
                               })}
                             >
                               {member && prettyTimeFromSeconds(member)}
