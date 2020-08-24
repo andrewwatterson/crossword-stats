@@ -12,7 +12,11 @@ const colors = {
 
   lightGreen: "#D4F5E2",
   lightRed: "#FAD5DE",
-  lightYellow: "#F7EBC4"
+  lightYellow: "#F7EBC4",
+
+  gold: "#FFF3CC",
+  silver: "#EBEBEB",
+  bronze: "#ECCBBF"
 };
 
 const icons = {

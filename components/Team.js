@@ -6,7 +6,7 @@ import {FirebaseContext} from '../FirebaseContext';
 
 import * as Stz from '../style';
 import {leaveTeam} from '../db';
-import {prettyTimeFromSeconds, dayNames, nonNullMaxIndicesFromArray, nonNullMinIndicesFromArray} from '../helpers';
+import {prettyTimeFromSeconds, dayNames, mapArrayToRank, nonNullMinIndicesFromArray} from '../helpers';
 import {Card} from './ui/ui';
 import DropdownMenu from './ui/DropdownMenu';
 
@@ -100,11 +100,31 @@ export default function Team(props) {
   }, [props.weekNo, teamInfo.members]);
 
   const {timesByDay, totalWins, totalTime} = times;
+  const winsRanks = mapArrayToRank(totalWins, true);
 
   const dropdownOptions = [
     {label: "Get Invite Link", action: () => { openModal("inviteLink", {teamId: id}) }},
     {label: "Leave Team", action: () => { leaveTeam(db, user.uid, id) }}
   ];
+
+  const getCxForRank = (rank, isTie) => {
+    let classArray = [];
+
+    if(teamInfo.members.length > 3) {
+      rank === 1 && classArray.push('standing-first');
+      rank === 2 && classArray.push('standing-second');
+      rank === 3 && classArray.push('standing-third');
+
+      if(isTie) { classArray.push('standing-tie-olympic'); }
+    } else {
+      rank === 1 && classArray.push('standing-highest');
+      rank === teamInfo.members.length && classArray.push('standing-lowest');
+
+      if(isTie) { classArray.push('standing-tie'); }
+    }
+
+    return classArray;
+  }
 
   return (
     <TeamScrollWrapper>
@@ -128,21 +148,15 @@ export default function Team(props) {
             <ShadedRow className="times-row">
               <TitleCell className="shaded">Wins</TitleCell>
               {teamInfo.members.map((m, i) => {
+                const winsRank = winsRanks[i];
+                const isTie = winsRanks.indexOf(winsRank) !== winsRanks.lastIndexOf(winsRank);
 
-                var fewestWins = nonNullMinIndicesFromArray(totalWins);
-                var mostWins = nonNullMaxIndicesFromArray(totalWins);
+                const classArray = getCxForRank(winsRank, isTie);
 
                 return (
                   <TimeCell key={i}>
                     <TimeContainer
-                      className={cx({
-                        'standing-lowest': fewestWins.length === 1 && fewestWins.indexOf(String(i)) !== -1,
-                        'standing-highest': mostWins.length === 1 && mostWins.indexOf(String(i)) !== -1,
-                        'standing-tie': 
-                          (fewestWins.length > 1 && fewestWins.indexOf(String(i)) !== -1) ||
-                          (mostWins.length > 1 && mostWins.indexOf(String(i)) !== -1)
-                        
-                      })}
+                      className={cx(classArray)}
                     >
                       {totalWins && totalWins[i]}
                     </TimeContainer>
@@ -159,23 +173,20 @@ export default function Team(props) {
           <tbody>
 
             {timesByDay && Object.keys(timesByDay).map((day) => {
-
-                var min = nonNullMinIndicesFromArray(timesByDay[day]);
-                var max = nonNullMaxIndicesFromArray(timesByDay[day]);
+                var dayRanks = mapArrayToRank(timesByDay[day]);
                 return (
                     <tr key={day}>
                       <TitleCell>{dayNames()[day]}</TitleCell>
                       {timesByDay[day].map((member, i) => {
+                        const dayRank = dayRanks[i];
+                        const isTie = dayRanks.indexOf(dayRank) !== dayRanks.lastIndexOf(dayRank);
+
+                        const classArray = getCxForRank(dayRank, isTie);
+
                         return (
                           <TimeCell key={day + "-" + i}>
                             <TimeContainer
-                              className={cx({
-                                'standing-lowest': max.length === 1 && max.indexOf(String(i)) !== -1,
-                                'standing-highest': min.length === 1 && min.indexOf(String(i)) !== -1,
-                                'standing-tie':
-                                  (min.length > 1 && min.indexOf(String(i)) !== -1) ||
-                                  (max.length > 1 && max.indexOf(String(i)) !== -1),
-                              })}
+                              className={cx(classArray)}
                             >
                               {member && prettyTimeFromSeconds(member)}
                             </TimeContainer>
@@ -276,6 +287,10 @@ const TimeContainer = Styled.div`
   height: 28px;
   line-height: 28px;
 
+  &.standing-highest {
+    background-color: ${Stz.colors.lightGreen};
+  }
+
   &.standing-lowest {
     background-color: ${Stz.colors.lightRed};
   }
@@ -284,8 +299,20 @@ const TimeContainer = Styled.div`
     background-color: ${Stz.colors.lightYellow};
   }
 
-  &.standing-highest {
-    background-color: ${Stz.colors.lightGreen};
+  &.standing-first {
+    background-color: ${Stz.colors.gold};
+  }
+
+  &.standing-second {
+    background-color: ${Stz.colors.silver};
+  }
+
+  &.standing-third {
+    background-color: ${Stz.colors.bronze};
+  }
+
+  &.standing-tie-olympic {
+    font-weight: bold;
   }
 `;
 
