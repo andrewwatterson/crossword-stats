@@ -107,6 +107,25 @@ export default function Team(props) {
     {label: "Leave Team", action: () => { leaveTeam(db, user.uid, id) }}
   ];
 
+  const getCxForRank = (rank, isTie) => {
+    let classArray = [];
+
+    if(teamInfo.members.length > 3) {
+      rank === 1 && classArray.push('standing-first');
+      rank === 2 && classArray.push('standing-second');
+      rank === 3 && classArray.push('standing-third');
+
+      if(isTie) { classArray.push('standing-tie-olympic'); }
+    } else {
+      rank === 1 && classArray.push('standing-highest');
+      rank === teamInfo.members.length && classArray.push('standing-lowest');
+
+      if(isTie) { classArray.push('standing-tie'); }
+    }
+
+    return classArray;
+  }
+
   return (
     <TeamScrollWrapper>
       <TeamCard>
@@ -130,16 +149,14 @@ export default function Team(props) {
               <TitleCell className="shaded">Wins</TitleCell>
               {teamInfo.members.map((m, i) => {
                 const winsRank = winsRanks[i];
+                const isTie = winsRanks.indexOf(winsRank) !== winsRanks.lastIndexOf(winsRank);
+
+                const classArray = getCxForRank(winsRank, isTie);
 
                 return (
                   <TimeCell key={i}>
                     <TimeContainer
-                      className={cx({
-                        'standing-first': winsRank === 1,
-                        'standing-second': winsRank === 2,
-                        'standing-third': winsRank === 3,
-                        'is-tie': winsRanks.indexOf(winsRank) !== winsRanks.lastIndexOf(winsRank)
-                      })}
+                      className={cx(classArray)}
                     >
                       {totalWins && totalWins[i]}
                     </TimeContainer>
@@ -162,15 +179,14 @@ export default function Team(props) {
                       <TitleCell>{dayNames()[day]}</TitleCell>
                       {timesByDay[day].map((member, i) => {
                         const dayRank = dayRanks[i];
+                        const isTie = dayRanks.indexOf(dayRank) !== dayRanks.lastIndexOf(dayRank);
+
+                        const classArray = getCxForRank(dayRank, isTie);
+
                         return (
                           <TimeCell key={day + "-" + i}>
                             <TimeContainer
-                              className={cx({
-                                'standing-first': dayRank === 1,
-                                'standing-second': dayRank === 2,
-                                'standing-third': dayRank === 3,
-                                'is-tie': dayRanks.indexOf(dayRank) !== dayRanks.lastIndexOf(dayRank)
-                              })}
+                              className={cx(classArray)}
                             >
                               {member && prettyTimeFromSeconds(member)}
                             </TimeContainer>
@@ -271,6 +287,18 @@ const TimeContainer = Styled.div`
   height: 28px;
   line-height: 28px;
 
+  &.standing-highest {
+    background-color: ${Stz.colors.lightGreen};
+  }
+
+  &.standing-lowest {
+    background-color: ${Stz.colors.lightRed};
+  }
+
+  &.standing-tie {
+    background-color: ${Stz.colors.lightYellow};
+  }
+
   &.standing-first {
     background-color: ${Stz.colors.gold};
   }
@@ -283,7 +311,7 @@ const TimeContainer = Styled.div`
     background-color: ${Stz.colors.bronze};
   }
 
-  &.is-tie {
+  &.standing-tie-olympic {
     font-weight: bold;
   }
 `;
