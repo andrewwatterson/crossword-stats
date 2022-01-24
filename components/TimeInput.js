@@ -16,7 +16,7 @@ export default class TimeInput extends React.Component {
 
     this.state = {
       timeinput_time: '',
-      timeinput_date: todayAsInputString,
+      timeinput_date: props.initialDate || todayAsInputString,
       timeinput_disabled: false,
       timeinput_error: null
     }

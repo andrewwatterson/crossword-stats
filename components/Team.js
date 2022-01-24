@@ -183,10 +183,17 @@ export default function Team(props) {
 
                         const classArray = getCxForRank(dayRank, isTie);
 
+                        const isEditable = member.id === user.uid;
+                        const date = new Date(weekNoYear, 0, 1 + (weekNo - 1) * 7);
+                        const timeInputDateString = date.toJSON().slice(0, 10);
+
                         return (
                           <TimeCell key={day + "-" + i}>
                             <TimeContainer
-                              className={cx(classArray)}
+                              className={cx({ "editable": isEditable }, classArray)}
+                              onClick={isEditable
+                                ? () => openModal("timeInput", { initialDate: timeInputDateString })
+                                : undefined}
                             >
                               {member && prettyTimeFromSeconds(member)}
                             </TimeContainer>
@@ -313,6 +320,10 @@ const TimeContainer = Styled.div`
 
   &.standing-tie-olympic {
     font-weight: bold;
+  }
+
+  &.editable {
+    cursor: pointer;
   }
 `;
 
