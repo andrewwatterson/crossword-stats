@@ -1,5 +1,5 @@
 import dateFormat from 'dateformat';
-import chrono from 'chrono-node';
+import * as chrono from 'chrono-node';
 
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
