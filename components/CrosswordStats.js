@@ -36,7 +36,7 @@ export default function CrosswordStats(props) {
 
   let [modals, setModals] = useState({open: false, options: {}});
 
-  var openModal = (name, options) => {
+  var openModal = (name, options = {}) => {
     setModals({open: name, options: options});
   }
 
@@ -53,7 +53,7 @@ export default function CrosswordStats(props) {
         <MyTeams />
         {/*<TimesList />*/}
       </AppContent>
-      {modals.open === "timeInput" && <TimeInput />}
+      {modals.open === "timeInput" && <TimeInput initialDate={modals.options.initialDate} />}
       {modals.open === "createTeam" && <CreateTeam />}
       {modals.open === "inviteLink" && <InviteLink teamId={modals.options.teamId} />}
       <TimeInputFAB alt="Add Time" onClick={() => { openModal("timeInput"); }}/>
