@@ -6,7 +6,7 @@ import {FirebaseContext} from '../FirebaseContext';
 
 import * as Stz from '../style';
 import {leaveTeam} from '../db';
-import {prettyTimeFromSeconds, dayNames, mapArrayToRank, nonNullMinIndicesFromArray} from '../helpers';
+import {prettyTimeFromSeconds, dayNames, mapArrayToRank, nonNullMinIndicesFromArray, getDateFromWeekNumber} from '../helpers';
 import {Card} from './ui/ui';
 import DropdownMenu from './ui/DropdownMenu';
 
@@ -16,7 +16,7 @@ export default function Team(props) {
   const context = useContext(FirebaseContext);
 
   const {db, user, openModal} = context;
-  const {id} = props;
+  const {id, weekNo, weekNoYear} = props;
 
   useEffect(() => {
 
@@ -45,7 +45,7 @@ export default function Team(props) {
   
       setTeamInfo(newTeamInfo);
     })
-  }, [props.id]);
+  }, [id]);
 
   useEffect(() => {
 
@@ -97,7 +97,7 @@ export default function Team(props) {
       })
     }
 
-  }, [props.weekNo, teamInfo.members]);
+  }, [weekNo, teamInfo.members]);
 
   const {timesByDay, totalWins, totalTime} = times;
   const winsRanks = mapArrayToRank(totalWins, true);
@@ -183,9 +183,10 @@ export default function Team(props) {
 
                         const classArray = getCxForRank(dayRank, isTie);
 
-                        const isEditable = member.id === user.uid;
-                        const date = new Date(weekNoYear, 0, 1 + (weekNo - 1) * 7);
-                        const timeInputDateString = date.toJSON().slice(0, 10);
+                        const isEditable = user.uid === teamInfo.members[i].id;
+                        const date = getDateFromWeekNumber(weekNo, weekNoYear);
+                        date.setDate(date.getDate() + Number(day));
+                        const timeInputDateString = date.toJSON().slice(0, 10); 
 
                         return (
                           <TimeCell key={day + "-" + i}>
@@ -210,6 +211,8 @@ export default function Team(props) {
     </TeamScrollWrapper>
   );
 }
+
+// hello
 
 const EllipsisButton = Styled.button`
   height: 24px;

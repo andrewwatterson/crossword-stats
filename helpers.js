@@ -65,7 +65,7 @@ export function getWeekNumber(d) {
     return { weekNoYear: d.getUTCFullYear(), weekNo: weekNo };
 }
 
-export function getPrettyDateFromWeekNumber(weekNo, weekNoYear) {
+export function getDateFromWeekNumber(weekNo, weekNoYear) {
     var simple = new Date(weekNoYear, 0, 1 + (weekNo - 1) * 7);
     var dow = simple.getDay();
     var ISOweekStart = simple;
@@ -73,6 +73,12 @@ export function getPrettyDateFromWeekNumber(weekNo, weekNoYear) {
         ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
     else
         ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+
+    return ISOweekStart;
+}
+
+export function getPrettyDateFromWeekNumber(weekNo, weekNoYear) {
+    var ISOweekStart = getDateFromWeekNumber(weekNo, weekNoYear);
     return dateFormat(ISOweekStart, "d mmm, yyyy");
 }
 
